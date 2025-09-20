@@ -1,0 +1,30 @@
+.info-section {
+  padding: 4rem 2rem;
+  background-color: #f9fafb;
+  text-align: center;
+}
+
+.info-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.info-section h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: #1e3a8a;
+}
+
+.info-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.info-section li {
+  font-size: 1.2rem;
+  margin: 0.75rem 0;
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
