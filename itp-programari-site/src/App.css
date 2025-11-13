@@ -11,6 +11,6 @@ html {
   scroll-behavior: smooth;
 }
 section {
-  scroll-margin-top: 70px; /* evită suprapunerea cu navbar */
-  padding: 4rem 1rem;      /* spațiu aerisit */
+  scroll-margin-top: 70px;
+  padding: 4rem 1rem;   
 }
