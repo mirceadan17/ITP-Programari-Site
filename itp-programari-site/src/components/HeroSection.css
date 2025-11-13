@@ -1,6 +1,6 @@
 .hero {
   position: relative;
-  height: 90vh; /* aproape toată înălțimea ecranului */
+  height: 90dvh; /* aproape toată înălțimea ecranului */
   background: url("https://images.unsplash.com/photo-1503376780353-7e6692767b70")
     no-repeat center center/cover;
   display: flex;
@@ -20,7 +20,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
 }
 
 .hero-content {
