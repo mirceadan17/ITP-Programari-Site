@@ -3,11 +3,11 @@ import "./BookingForm.css";
 
 function BookingForm() {
   const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    plate: "",
-    vehicleType: "",
-    date: "",
+    nume: "",
+    telefon: "",
+    nrInmatriculare: "",
+    tip: "",
+    data: "",
   });
 
   const handleChange = (e) => {
@@ -19,26 +19,29 @@ function BookingForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const res = await fetch("http://localhost:5001/api/bookings", {
+      const response = await fetch("http://localhost:5000/api/programare", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      if (!res.ok) throw new Error("Eroare la trimitere");
-      const data = await res.json();
-      console.log("Răspuns server:", data);
-      alert("Programarea a fost trimisă!");
-      setFormData({
-        name: "",
-        phone: "",
-        plate: "",
-        vehicleType: "",
-        date: "",
-      });
-    } catch (err) {
-      console.error(err);
-      alert("Nu s-a putut trimite programarea. Încearcă din nou.");
+
+      if (response.ok) {
+        alert("✔ Programare trimisă cu succes!");
+        setFormData({
+          nume: "",
+          telefon: "",
+          nrInmatriculare: "",
+          tip: "",
+          data: "",
+        });
+      } else {
+        alert("❌ Eroare la trimitere.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("❌ Serverul nu răspunde.");
     }
   };
 
@@ -48,58 +51,45 @@ function BookingForm() {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          name="name"
+          name="nume"
           placeholder="Nume complet"
-          value={formData.name}
+          value={formData.nume}
           onChange={handleChange}
           required
         />
         <input
           type="text"
-          name="phone"
+          name="telefon"
           placeholder="Număr de telefon"
-          value={formData.phone}
+          value={formData.telefon}
           onChange={handleChange}
           required
         />
         <input
           type="text"
-          name="plate"
+          name="nrInmatriculare"
           placeholder="Număr înmatriculare"
-          value={formData.plate}
+          value={formData.nrInmatriculare}
           onChange={handleChange}
           required
         />
 
-        <div className="radio-group">
-          <label>Tip vehicul*</label>
-          <div className="radio-options">
-            {[
-              "Autoturism",
-              "Autoutilitară",
-              "Motocicletă",
-              "Remorcă",
-              "Uber/Taxi",
-            ].map((type) => (
-              <label key={type} className="radio-item">
-                <input
-                  type="radio"
-                  name="vehicleType"
-                  value={type}
-                  checked={formData.vehicleType === type}
-                  onChange={handleChange}
-                  required
-                />
-                <span>{type}</span>
-              </label>
-            ))}
-          </div>
-        </div>
+        <select
+          name="tip"
+          value={formData.tip}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Alege tipul de programare</option>
+          <option value="ITP">ITP</option>
+          <option value="Revizie">Revizie</option>
+          <option value="Service">Service</option>
+        </select>
 
         <input
           type="date"
-          name="date"
-          value={formData.date}
+          name="data"
+          value={formData.data}
           onChange={handleChange}
           required
         />
