@@ -17,9 +17,29 @@ function BookingForm() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Date trimise:", formData);
+    try {
+      const res = await fetch("http://localhost:5001/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) throw new Error("Eroare la trimitere");
+      const data = await res.json();
+      console.log("Răspuns server:", data);
+      alert("Programarea a fost trimisă!");
+      setFormData({
+        name: "",
+        phone: "",
+        plate: "",
+        vehicleType: "",
+        date: "",
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Nu s-a putut trimite programarea. Încearcă din nou.");
+    }
   };
 
   return (
