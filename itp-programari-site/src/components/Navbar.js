@@ -37,6 +37,9 @@ const Navbar = () => {
             Contact
           </a>
         </li>
+        <li>
+          <a href="/admin">Admin</a>
+        </li>
       </ul>
 
       <div className="hamburger" onClick={toggleMenu}>

@@ -13,22 +13,51 @@ app.use(cors());
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB conectat cu succes!"))
-  .catch((err) => console.error("Eroare conectare MongoDB:", err));
+  .catch((err) => console.error("Eroare la MongoDB:", err));
 
 app.post("/api/programare", async (req, res) => {
   try {
-    const programareNoua = new Programare(req.body);
-    await programareNoua.save();
-    res.status(201).json({ mesaj: "✔ Programare salvată cu succes!" });
-  } catch (err) {
-    console.error("Eroare salvare: ", err);
-    res.status(500).json({ eroare: "❌ Eroare la salvarea programării." });
+    const programare = new Programare(req.body);
+    await programare.save();
+    res.json({ message: "Programare salvată!" });
+  } catch (error) {
+    res.status(500).json({ message: "Eroare la salvare." });
   }
 });
 
-app.get("/", (req, res) => {
-  res.send("Serverul funcționează!");
+app.get("/api/programari", async (req, res) => {
+  const programari = await Programare.find().sort({ data: 1 });
+  res.json(programari);
 });
 
-const PORT = process.env.PORT || 5001;
+app.delete("/api/programare/:id", async (req, res) => {
+  await Programare.findByIdAndDelete(req.params.id);
+  res.json({ mesaj: "Programare ștearsă!" });
+});
+
+app.put("/api/programare/:id", async (req, res) => {
+  try {
+    const programare = await Programare.findByIdAndUpdate(
+      req.params.id,
+      { status: req.body.status },
+      { new: true }
+    );
+    res.json(programare);
+  } catch (error) {
+    res.status(500).json({ message: "Eroare la actualizare." });
+  }
+});
+
+app.post("/api/admin/login", (req, res) => {
+  const { user, pass } = req.body;
+
+  // AICI trebuie schimbată parola reală
+  if (user === "admin" && pass === "1234") {
+    return res.json({ success: true });
+  }
+
+  res.status(401).json({ success: false, mesaj: "Date de login greșite!" });
+});
+
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server pornit pe portul ${PORT} 🔥`));
