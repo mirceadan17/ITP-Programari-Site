@@ -40,6 +40,9 @@ const Navbar = () => {
         <li>
           <a href="/admin">Admin</a>
         </li>
+        <li>
+          <a href="/calendar">Calendar</a>
+        </li>
       </ul>
 
       <div className="hamburger" onClick={toggleMenu}>

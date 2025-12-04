@@ -1,35 +1,47 @@
-// src/pages/AdminLogin.js
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import axios from "axios";
+import "./AdminLogin.css";
 
 function AdminLogin() {
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
-  const navigate = useNavigate();
+  const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (user === "admin" && pass === "1234") {
-      sessionStorage.setItem("admin", "true");
-      navigate("/admin/panel");
-    } else alert("Date incorecte!");
+  const handleLogin = async () => {
+    try {
+      const res = await axios.post("http://localhost:5001/api/admin/login", {
+        user,
+        pass,
+      });
+
+      sessionStorage.setItem("adminToken", res.data.token);
+      window.location.href = "/panel";
+    } catch (err) {
+      setError("❌ Utilizator sau parolă greșită!");
+    }
   };
 
   return (
-    <div style={{ padding: "40px" }}>
-      <h2>Login Admin</h2>
-      <form onSubmit={handleLogin}>
-        <input
-          placeholder="Utilizator"
-          onChange={(e) => setUser(e.target.value)}
-        />
-        <input
-          placeholder="Parolă"
-          type="password"
-          onChange={(e) => setPass(e.target.value)}
-        />
-        <button type="submit">Login</button>
-      </form>
+    <div className="login-container">
+      <h2>🔐 Autentificare Admin</h2>
+
+      <input
+        type="text"
+        placeholder="Utilizator"
+        value={user}
+        onChange={(e) => setUser(e.target.value)}
+      />
+
+      <input
+        type="password"
+        placeholder="Parolă"
+        value={pass}
+        onChange={(e) => setPass(e.target.value)}
+      />
+
+      {error && <p className="login-error">{error}</p>}
+
+      <button onClick={handleLogin}>Autentificare</button>
     </div>
   );
 }

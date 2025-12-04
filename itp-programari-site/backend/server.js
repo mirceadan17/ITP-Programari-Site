@@ -31,8 +31,13 @@ app.get("/api/programari", async (req, res) => {
 });
 
 app.delete("/api/programare/:id", async (req, res) => {
-  await Programare.findByIdAndDelete(req.params.id);
-  res.json({ mesaj: "Programare ștearsă!" });
+  try {
+    const id = req.params.id;
+    await Programare.findByIdAndDelete(id);
+    res.json({ message: "Programare ștearsă cu succes" });
+  } catch (error) {
+    res.status(500).json({ error: "Eroare la ștergere" });
+  }
 });
 
 app.put("/api/programare/:id", async (req, res) => {
@@ -49,14 +54,17 @@ app.put("/api/programare/:id", async (req, res) => {
 });
 
 app.post("/api/admin/login", (req, res) => {
-  const { user, pass } = req.body;
+  const { username, password } = req.body;
+  const ADMIN_USER = "admin";
+  const ADMIN_PASS = "1234";
 
-  // AICI trebuie schimbată parola reală
-  if (user === "admin" && pass === "1234") {
-    return res.json({ success: true });
+  if (username === ADMIN_USER && password === ADMIN_PASS) {
+    return res.json({ success: true, token: "ADMIN-TOKEN-ITP" });
   }
 
-  res.status(401).json({ success: false, mesaj: "Date de login greșite!" });
+  res
+    .status(401)
+    .json({ success: false, message: "Date de autentificare invalide!" });
 });
 
 const PORT = process.env.PORT || 5000;
