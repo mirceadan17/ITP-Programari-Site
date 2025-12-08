@@ -9,24 +9,41 @@ function AdminPanel() {
   const [sortField, setSortField] = useState("data");
   const [sortOrder, setSortOrder] = useState("asc");
 
-  if (!sessionStorage.getItem("adminToken")) {
-    window.location.href = "/admin";
-  }
+  useEffect(() => {
+    const token = sessionStorage.getItem("adminToken");
+    if (!token) {
+      window.location.href = "/admin";
+    } else {
+      loadData();
+    }
+  }, []);
 
   const loadData = async () => {
-    const res = await axios.get("http://localhost:5001/api/programari");
-    setData(res.data);
+    try {
+      const token = sessionStorage.getItem("adminToken");
+      const res = await axios.get("http://localhost:5001/api/programari", {
+        headers: { Authorization: token },
+      });
+      setData(res.data);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        window.location.href = "/admin";
+      }
+    }
   };
 
   const deleteBooking = async (id) => {
     if (!window.confirm("Sigur ștergi această programare?")) return;
-    await axios.delete(`http://localhost:5001/api/programare/${id}`);
-    loadData();
+    try {
+      const token = sessionStorage.getItem("adminToken");
+      await axios.delete(`http://localhost:5001/api/programare/${id}`, {
+        headers: { Authorization: token },
+      });
+      loadData();
+    } catch (error) {
+      console.error(error);
+    }
   };
-
-  useEffect(() => {
-    loadData();
-  }, []);
 
   const filteredData = data
     .filter((x) =>
@@ -60,10 +77,49 @@ function AdminPanel() {
     });
   };
 
+  const exportToCSV = () => {
+    const headers = [
+      "Nume",
+      "Telefon",
+      "Nr. Inmatriculare",
+      "Tip Serviciu",
+      "Data",
+      "Ora",
+    ];
+
+    const rows = filteredData.map((item) => [
+      item.nume,
+      item.telefon,
+      item.nrInmatriculare,
+      item.tip,
+      formatDate(item.data),
+      item.ora,
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((e) => e.join(",")),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute(
+        "download",
+        `programari_${new Date().toISOString().slice(0, 10)}.csv`
+      );
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
   return (
     <div className="admin-panel">
-      <h2>📋 Programări ITP</h2>
-
+      <h2>Programări ITP</h2>
       <div className="admin-filters">
         <input
           type="text"
@@ -71,14 +127,15 @@ function AdminPanel() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-
         <input
           type="date"
           value={filterDate}
           onChange={(e) => setFilterDate(e.target.value)}
         />
+        <button className="export-button" onClick={exportToCSV}>
+          Export CSV
+        </button>
       </div>
-
       <table>
         <thead>
           <tr>
@@ -89,10 +146,10 @@ function AdminPanel() {
             </th>
             <th onClick={() => changeSort("tip")}>Serviciu ⬍</th>
             <th onClick={() => changeSort("data")}>Data ⬍</th>
+            <th>Ora</th>
             <th>Acțiune</th>
           </tr>
         </thead>
-
         <tbody>
           {filteredData.map((x) => (
             <tr key={x._id}>
@@ -101,25 +158,23 @@ function AdminPanel() {
               <td>{x.nrInmatriculare}</td>
               <td>{x.tip}</td>
               <td>{formatDate(x.data)}</td>
+              <td>{x.ora || "-"}</td>
               <td>
                 <button className="delete" onClick={() => deleteBooking(x._id)}>
-                  Șterge ❌
+                  Șterge
                 </button>
               </td>
             </tr>
           ))}
-
           {filteredData.length === 0 && (
             <tr>
-              <td colSpan="6" style={{ textAlign: "center", padding: "10px" }}>
-                ❌ Nicio programare găsită.
+              <td colSpan="7" style={{ textAlign: "center", padding: "10px" }}>
+                Nicio programare găsită.
               </td>
             </tr>
           )}
         </tbody>
       </table>
-
-      {/* Buton Logout */}
       <button
         className="logout"
         onClick={() => {
@@ -127,7 +182,7 @@ function AdminPanel() {
           window.location.href = "/";
         }}
       >
-        ↩ Ieșire
+        Ieșire
       </button>
     </div>
   );

@@ -1,154 +1,142 @@
 .admin-panel {
-  max-width: 1100px;
-  margin: 50px auto;
-  padding: 25px;
-  border-radius: 15px;
-  background: var(--bg-panel);
-  box-shadow: var(--shadow);
-  color: var(--text);
-  transition: background 0.3s, color 0.3s;
-  animation: fadeIn 0.4s ease;
+  max-width: 950px;
+  margin: 80px auto 40px auto; 
+  padding: 30px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .admin-panel h2 {
   text-align: center;
-  margin-bottom: 30px;
-  font-size: 26px;
-  font-weight: 700;
-}
-
-
-.admin-filters {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
+  color: #1e3a8a;
   margin-bottom: 25px;
 }
 
-.admin-filters input {
-  flex: 1;
-  padding: 10px;
+.calendar-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  padding: 15px;
   border-radius: 10px;
-  border: 2px solid var(--border);
-  background: var(--bg-input);
-  color: var(--text);
-  font-size: 15px;
-  transition: 0.2s;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.admin-filters input:focus {
-  border-color: var(--primary);
-  outline: none;
+.calendar-controls label {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #333;
 }
 
+.calendar-controls input[type="date"] {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: white;
+  color: #333;
+  cursor: pointer;
+}
+
+.calendar-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.slot {
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.slot.free {
+  background-color: #2ecc71;
+}
+
+.slot.busy {
+  background-color: #e74c3c;
+  cursor: not-allowed;
+}
+
+.slot:hover.free {
+  background-color: #27ae60;
+}
 
 table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--bg-table);
-  border-radius: 10px;
-  overflow: hidden;
+  margin-top: 20px;
+  font-size: 0.95rem;
 }
 
 th, td {
-  padding: 12px 10px;
-  text-align: center;
-  border-bottom: 1px solid var(--border);
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
 }
 
 th {
+  background-color: #f8f8f8;
+  color: #555;
   cursor: pointer;
-  font-weight: 600;
-  background: var(--bg-th);
 }
 
-th:hover {
-  background: var(--bg-th-hover);
+td {
+  color: #333;
 }
-
-tbody tr:hover {
-  background: var(--hover-row);
-}
-
 
 .delete {
-  padding: 7px 12px;
-  border: none;
   background-color: #e74c3c;
   color: white;
-  border-radius: 8px;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 13px;
-  transition: 0.3s;
 }
-
-.delete:hover {
-  background-color: #c0392b;
-}
-
 
 .logout {
+  float: right;
   margin-top: 20px;
-  padding: 10px 20px;
-  background: var(--primary);
+  padding: 10px 15px;
+  background-color: #3498db;
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 15px;
-  transition: 0.3s;
-  float: right;
 }
 
-.logout:hover {
-  opacity: 0.8;
+.admin-filters {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  align-items: center;
 }
 
-
-:root {
-  --primary: #1e73be;
-  --text: #2c3e50;
-  --bg-panel: #ffffff;
-  --bg-input: #f2f2f2;
-  --bg-table: #ffffff;
-  --bg-th: #eaeaea;
-  --bg-th-hover: #dadada;
-  --hover-row: #f6f6f6;
-  --border: #d0d0d0;
-  --shadow: 0 4px 15px rgba(0,0,0,0.08);
+.admin-filters input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 200px;
 }
 
-body.dark-mode {
-  --primary: #4ea8ff;
-  --text: #eaf1f8;
-  --bg-panel: #1e1f22;
-  --bg-input: #2a2c31;
-  --bg-table: #1f2024;
-  --bg-th: #2d2f35;
-  --bg-th-hover: #34363c;
-  --hover-row: #2b2d32;
-  --border: #3c3d42;
-  --shadow: 0 4px 18px rgba(255,255,255,0.05);
-}
-
-
-@media (max-width: 768px) {
-  .admin-filters {
-    flex-direction: column;
-  }
-
-  th, td {
-    font-size: 12px;
-    padding: 8px;
-  }
-
-  .logout {
-    width: 100%;
-    float: none;
-  }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.export-button {
+  padding: 10px 15px;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
 }
